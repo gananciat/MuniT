@@ -10,10 +10,13 @@
         <div class="col-md-12" data-bind="visible:model.contratoController.gridMode()">
             <div class="box box-primary">
               <div class="box-header with-border">
+                  @if(Auth::user()->tipo_usuario_id == 1)
                     <h1 class="box-title">contratos <button class="btn btn-success btn-md" id="btnagregar" data-bind="click: model.contratoController.nuevo" ><i class="fa fa-plus-circle"></i> Agregar</button></h1>
+                  @endif
                   <div class="box-tools pull-right">
                   </div>
               </div>
+              <br>
               <!-- /.box-header -->
               <!-- centro -->
               <div class="panel-body table-responsive" id="listadoregistros">

@@ -16,6 +16,7 @@ class EmpleadoController extends ApiController
    public function __construct()
     {
         parent::__construct(); //proteje las rutas
+        $this->middleware('consulta', ['only' => ['store','show','update','destroy','cambiarEstado']]);
     }
 
     //retorna vista principal

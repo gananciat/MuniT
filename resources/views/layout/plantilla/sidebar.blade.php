@@ -9,7 +9,7 @@
           <i class="fa fa-tasks"></i> <span>Escritorio</span>
         </a>
       </li>
-
+      @if(Auth::user()->tipo_usuario_id == 1)
       <li id="mAlmacen" class="treeview">
         <a href="#">
           <i class="fa fa-cog"></i>
@@ -26,6 +26,7 @@
           <li id="lEstadoCivil"><a href="{{ route('estadoCivilsView') }}"><i class="fa fa-circle-o"></i> Estados Civiles</a></li>
         </ul>
       </li>
+      @endif
 
       <li id="mCompras" class="treeview">
         <a href="#">
@@ -34,25 +35,29 @@
            <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li id="cargos"><a href="{{ route('cargosView') }}"><i class="fa fa-circle-o"></i> Puestos Laborales</a></li>
-          <li id="departamentos"><a href="{{ route('unidadsView') }}"><i class="fa fa-circle-o"></i>Unidad Departamentos</a></li>
+          @if(Auth::user()->tipo_usuario_id == 1)
+            <li id="cargos"><a href="{{ route('cargosView') }}"><i class="fa fa-circle-o"></i> Puestos Laborales</a></li>
+            <li id="departamentos"><a href="{{ route('unidadsView') }}"><i class="fa fa-circle-o"></i>Unidad Departamentos</a></li>
+          @endif
           <li id="empleado"><a href="{{ route('empleadosView') }}"><i class="fa fa-circle-o"></i> Empleados</a></li>
           <li id="lcontratt¿os"><a href="{{ route('contratosView') }}"><i class="fa fa-circle-o"></i> Contratos</a></li>
         </ul>
       </li>
       
-      <li id="mAcceso" class="treeview">
-        <a href="#">
-          <i class="fa fa-folder"></i> <span>Acceso</span>
-          <i class="fa fa-angle-left pull-right"></i>
-        </a>
-        <ul class="treeview-menu">
-          <li id="lUsuarios"><a href="{{ route('usersView') }}"><i class="fa fa-circle-o"></i> Usuarios</a></li>
-          <li id="ltipoUsuario"><a href="{{ route('tipoUsuariosView') }}"><i class="fa fa-circle-o"></i> Tipo Usuarios</a></li>
-          
-        </ul>
-      </li>
-
+      @if(Auth::user()->tipo_usuario_id == 1)
+        <li id="mAcceso" class="treeview">
+          <a href="#">
+            <i class="fa fa-folder"></i> <span>Acceso</span>
+            <i class="fa fa-angle-left pull-right"></i>
+          </a>
+          <ul class="treeview-menu">
+            <li id="lUsuarios"><a href="{{ route('usersView') }}"><i class="fa fa-circle-o"></i> Usuarios</a></li>
+            <li id="ltipoUsuario"><a href="{{ route('tipoUsuariosView') }}"><i class="fa fa-circle-o"></i> Tipo Usuarios</a></li>
+            
+          </ul>
+        </li>
+      @endif
+      
       <li>
         <a href="#">
           <i class="fa fa-plus-square"></i> <span>Ayuda</span>

@@ -79,8 +79,8 @@
 <!--Fin-Contenido-->
 
 <script>
-        $(document).ready(function () {
-            model.tipoUsuarioController.initialize();
-        });
+    $(document).ready(function () {
+        model.tipoUsuarioController.initialize();
+    });
 </script>
 @endsection

@@ -15,6 +15,7 @@ class ContratoController extends ApiController
     public function __construct()
     {
         parent::__construct(); //proteje las rutas
+        $this->middleware('consulta', ['only' => ['store','show','update','destroy']]);
     }
 
     //retorna vista principal
@@ -87,7 +88,7 @@ class ContratoController extends ApiController
     //muestra un registro por id
     public function show(Contrato $contrato)
     {
-        return $this->showOne($cargo);
+        return $this->showOne($contrato);
     }
 
     //actualiza el registro terminar contrato

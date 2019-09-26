@@ -12,6 +12,7 @@ class TipoDocumentoController extends ApiController
     public function __construct()
     {
         parent::__construct();//proteger controlador
+        $this->middleware('consulta');
     }
 
     //retorna vista principal del index

@@ -4,11 +4,6 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     *
-     * @return void
-     */
     public function run()
     {
         $this->call(DepartamentoSeeder::class);
@@ -18,5 +13,8 @@ class DatabaseSeeder extends Seeder
         $this->call(EmpleadoSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(DiaLaboralSeeder::class);
+
+        $this->call(CargoSeeder::class);
+        $this->call(UnidadSeeder::class);
     }
 }

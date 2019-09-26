@@ -18,9 +18,17 @@
 Auth::routes();
 
 Route::get('/', 'HomeController@index');
+Route::get('/grafica/contratos/mes', 'HomeController@ordernaMeses')->name('grafica.contratos_meses');
+Route::get('/grafica/contratos/unidad_argo', 'HomeController@contratoDepartamento')->name('grafica.unidad_argo');
+Route::get('/grafica/contratos/estado_empleado', 'HomeController@empleadosGraficar')->name('grafica.estado_empleado');
+Route::get('/grafica/contratos/tipos_contratos', 'HomeController@tipoContratos')->name('grafica.tipos_contratos');
 Route::get('/home', 'HomeController@index')->name('home');
+
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 Route::name('cambiar_contraseña')->post('users_change_password','Acceso\UserController@changePassword');
+
+Route::get('/empleadosView/imprimir/empleados', 'ReporteController@empleados')->name('imprimir.empleados');
+Route::get('/empleadosView/imprimir/historial/{id}', 'ReporteController@historial')->name('imprimir.historial');
 
 //=====================DEPARTAMENTOS DE GUATEMALA==========================//
 Route::get('departamentosView', 'Configuracion\DepartamentoController@view')->name('departamentosView');

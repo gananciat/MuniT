@@ -12,6 +12,7 @@ class EstadoCivilController extends ApiController
    public function __construct()
     {
         parent::__construct(); //protege el controlador
+        $this->middleware('consulta');
     }
 
     //retorna vista principal del index

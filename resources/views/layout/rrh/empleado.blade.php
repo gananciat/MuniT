@@ -10,10 +10,14 @@
         <div class="col-md-12">
             <div class="box box-primary" data-bind="visible:model.empleadoController.gridMode()">
               <div class="box-header with-border">
-                    <h1 class="box-title">empleados <button class="btn btn-success btn-md" id="btnagregar" data-bind="click: model.empleadoController.nuevo" ><i class="fa fa-plus-circle"></i> Agregar</button></h1>
+                @if(Auth::user()->tipo_usuario_id == 1)
+                  <h1 class="box-title">empleados <button class="btn btn-success btn-md" id="btnagregar" data-bind="click: model.empleadoController.nuevo" ><i class="fa fa-plus-circle"></i> Agregar</button></h1>
+                @endif
                   <div class="box-tools pull-right">
+                    <a href="{{ route('imprimir.empleados') }}" class="btn btn-primary btn-sm" target="_blank">Listado de Empleados</a>
                   </div>
               </div>
+              <br>
               <!-- /.box-header -->
               <!-- centro -->
               <div class="panel-body table-responsive" id="listadoregistros">
@@ -37,12 +41,11 @@
                         <td data-bind="text: nit"></td>
                         <td><span class="label" data-bind="text: (estado === 1 ? 'Activo' : 'Inactivo'), css: (estado === 1 ? 'label-primary' : 'label-danger')"></span></td>
                         <td width="15%">
-
                           <a data-toggle="tooltip" title="ver información" class="btn btn-info btn-xs" data-bind="attr: { href: '/perfil?id='+id }"><i class="fa fa-eye"></i></a>
-
+                          @if(Auth::user()->tipo_usuario_id == 1)
                             <a href="#" class="btn btn-warning btn-xs" data-bind="click: model.empleadoController.editar" data-toggle="tooltip" title="editar"><i class="fa fa-pencil-square-o"></i></a>
-
                             <a href="#" class="btn btn-danger btn-xs" data-bind="click: model.empleadoController.destroy" data-toggle="tooltip" title="eliminar"><i class="fa fa-trash-o"></i></a>
+                          @endif
                         </td>
                     </tr>                          
                     </tbody>
