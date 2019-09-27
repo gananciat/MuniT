@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
 use App\Empleado;
-use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ReporteController extends Controller
 {
@@ -52,12 +54,12 @@ class ReporteController extends Controller
         $usuario = Empleado::findOrFail(Auth::user()->empleado_id);
         $pdf = PDF::loadView('layout.reporte.empleado', compact('empleados_informacion','usuario'));
 
-        return $pdf->stream('inventario.pdf');
+        Log::debug('Imprimio Empleados', array('información' => $empleados_informacion));
+        return $pdf->stream('empleado.pdf');
     }
 
     public function historial($id)
     {
-        $empleados_informacion = array();
         $empleado = Empleado::with('municipio.departamento','telefonos','estado_civil')->where('id',$id)->first();
 
         $data['dpi'] = $empleado->dpi;
@@ -78,22 +80,23 @@ class ReporteController extends Controller
         else
             $data['genero'] = 'Masculino';
 
+        $hoy = new DateTime();
+        $fecha = new DateTime($empleado->nacimiento);
+        $annos = $hoy->diff($fecha);
+        $data['edad'] = $annos->y;
         $data['profesion'] = $empleado->profesion; 
         $data['direccion'] = $empleado->municipio->departamento->nombre.', '.$empleado->municipio->nombre.', '.$empleado->direccion; 
         $data['estado_civil'] = $empleado->estado_civil->nombre; 
 
-        $data['telefonos'] = array();
+        $data['telefonos'] = '';
         foreach ($empleado->telefonos as $key => $telefono) {  
-            $data_tel['correlativo_tel'] = $key+1;
-            $data_tel['numero'] = $telefono->telefono;
-            array_push($data['telefonos'],$data_tel);
+            $data['telefonos'] .= $telefono->telefono.', ';
         }
 
-        array_push($empleados_informacion,$data);
-        
         $usuario = Empleado::findOrFail(Auth::user()->empleado_id);
-        $pdf = PDF::loadView('layout.reporte.empleado', compact('empleados_informacion','usuario'));
+        $pdf = PDF::loadView('layout.reporte.historial', compact('data','usuario'));
 
-        return $pdf->stream('inventario.pdf');
+        Log::debug('Imprimio Historial', array('información' => $data));
+        return $pdf->stream('historial.pdf');
     }    
 }

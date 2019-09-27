@@ -56,6 +56,11 @@
             
           </ul>
         </li>
+        <li>
+          <a href="{{ route('log-viewer::dashboard') }}">
+            <i class="fa fa-info-circle"></i> <span>Bitacora</span>
+          </a>
+      </li>        
       @endif
       
       <li>

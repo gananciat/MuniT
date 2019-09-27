@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Log;
 
 class UnidadController extends ApiController
 {
@@ -40,6 +41,8 @@ class UnidadController extends ApiController
         DB::beginTransaction();
             $data = $request->all();
             $unidad = unidad::create($data);
+            if($unidad)
+                Log::info('INSERT '.$unidad);
 
             $unidad->cargos()->attach($request->cargos);
 
@@ -69,14 +72,17 @@ class UnidadController extends ApiController
             return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
         }
 
-        $unidad->save();
+        if($unidad->save())
+            Log::notice('UPDATE '.$unidad);
+
         return $this->showOne($unidad);
     }
 
     //elminar registro de la tabla
     public function destroy(Unidad $unidad)
     {
-        $unidad->delete();
+        if($unidad->delete())
+            Log::critical('DELETE '.$unidad);
 
         return $this->showOne($unidad);
     }

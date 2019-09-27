@@ -6,6 +6,7 @@ use App\Prestacion;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Log;
 
 class PrestacionController extends ApiController
 {
@@ -39,6 +40,9 @@ class PrestacionController extends ApiController
         $data = $request->all();
         $prestacion = prestacion::create($data);
 
+        if($prestacion)
+            Log::info('INSERT '.$prestacion);
+
         return $this->showOne($prestacion,201);
     }
 
@@ -63,14 +67,17 @@ class PrestacionController extends ApiController
             return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
         }
 
-        $prestacion->save();
+        if($prestacion->save())
+            Log::notice('UPDATE '.$prestacion); 
+
         return $this->showOne($prestacion);
     }
 
     //elminar registro de la tabla
     public function destroy(Prestacion $prestacion)
     {
-        $prestacion->delete();
+        if($prestacion->delete())
+            Log::critical('DELETE '.$prestacion); 
 
         return $this->showOne($prestacion);
     }

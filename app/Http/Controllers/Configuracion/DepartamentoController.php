@@ -6,6 +6,7 @@ use App\Departamento;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Log;
 
 class DepartamentoController extends ApiController
 {
@@ -39,6 +40,9 @@ class DepartamentoController extends ApiController
         $data = $request->all();
         $departamento = Departamento::create($data);
 
+        if($departamento)
+            Log::info('INSERT '.$departamento);
+
         return $this->showOne($departamento,201);
     }
 
@@ -63,14 +67,17 @@ class DepartamentoController extends ApiController
             return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
         }
 
-        $departamento->save();
+        if($departamento->save())
+            Log::notice('UPDATE '.$departamento);  
+
         return $this->showOne($departamento);
     }
 
     //elminar registro de la tabla
     public function destroy(Departamento $departamento)
     {
-        $departamento->delete();
+        if($departamento->delete())
+            Log::critical('DELETE '.$departamento); 
 
         return $this->showOne($departamento);
     }

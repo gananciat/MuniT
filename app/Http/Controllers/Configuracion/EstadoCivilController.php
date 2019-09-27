@@ -6,6 +6,7 @@ use App\EstadoCivil;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Log;
 
 class EstadoCivilController extends ApiController
 {
@@ -39,6 +40,9 @@ class EstadoCivilController extends ApiController
         $data = $request->all();
         $estadoCivil = estadoCivil::create($data);
 
+        if($estadoCivil)
+            Log::info('INSERT '.$estadoCivil);
+
         return $this->showOne($estadoCivil,201);
     }
 
@@ -63,14 +67,17 @@ class EstadoCivilController extends ApiController
             return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
         }
 
-        $estadoCivil->save();
+        if($estadoCivil->save())
+            Log::notice('UPDATE '.$estadoCivil); 
+
         return $this->showOne($estadoCivil);
     }
 
     //eliminar registro de la tabla
     public function destroy(EstadoCivil $estadoCivil)
     {
-        $estadoCivil->delete();
+        if($estadoCivil->delete())
+            Log::critical('DELETE '.$estadoCivil); 
 
         return $this->showOne($estadoCivil);
     }

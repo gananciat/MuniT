@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Acceso;
 use App\User;
 use App\Empleado;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ApiController;
 
@@ -52,6 +54,9 @@ class UserController extends ApiController
 
         $user = User::create($data);
 
+        if($user)
+            Log::info('INSERT '.$user);
+
         return $this->showOne($user,201);
     }
 
@@ -76,14 +81,17 @@ class UserController extends ApiController
             return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
         }
 
-        $user->save();
+        if($user->save())
+            Log::notice('UPDATE '.$user);    
+
         return $this->showOne($user);
     }
 
     //eliminar registro a nivel logico
     public function destroy(User $user)
     {
-        $user->delete();
+        if($user->delete())
+            Log::critical('DELETE '.$user);  
 
         return $this->showOne($user);
     }

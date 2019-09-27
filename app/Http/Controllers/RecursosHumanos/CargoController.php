@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Log;
 
 class CargoController extends ApiController
 {
@@ -48,7 +49,8 @@ class CargoController extends ApiController
                 $atribucion->cargo_id = $cargo->id;
                 $atribucion->descripcion = $value['descripcion'];
 
-                $atribucion->save();
+                if($atribucion)
+                    Log::info('INSERT '.$atribucion);
             }
 
         DB::commit();
@@ -80,7 +82,8 @@ class CargoController extends ApiController
                 $atribucion->cargo_id = $cargo->id;
                 $atribucion->descripcion = $value['descripcion'];
 
-                $atribucion->save();
+                if($atribucion->save())
+                    Log::notice('UPDATE '.$atribucion); 
             }
 
         /* if (!$cargo->isDirty()) {
@@ -94,7 +97,8 @@ class CargoController extends ApiController
     //elminar registro de la tabla
     public function destroy(Cargo $cargo)
     {
-        $cargo->delete();
+        if($cargo->delete())
+            Log::critical('DELETE '.$cargo);
 
         return $this->showOne($cargo);
     }

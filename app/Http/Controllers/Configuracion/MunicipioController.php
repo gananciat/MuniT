@@ -6,6 +6,7 @@ use App\Municipio;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Log;
 
 class MunicipioController extends ApiController
 {
@@ -40,6 +41,9 @@ class MunicipioController extends ApiController
         $data = $request->all();
         $municipio = Municipio::create($data);
 
+        if($municipio)
+            Log::info('INSERT '.$municipio);
+
         return $this->showOne($municipio,201);
     }
 
@@ -66,14 +70,17 @@ class MunicipioController extends ApiController
             return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
         }
 
-        $municipio->save();
+        if($municipio->save())
+            Log::notice('UPDATE '.$municipio); 
+
         return $this->showOne($municipio);
     }
 
     //eliminar registro a nivel logico
     public function destroy(Municipio $municipio)
     {
-        $municipio->delete();
+        if($municipio->delete())
+            Log::critical('DELETE '.$municipio); 
 
         return $this->showOne($municipio);
     }

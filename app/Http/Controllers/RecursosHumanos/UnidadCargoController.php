@@ -6,6 +6,7 @@ use App\UnidadCargo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Log;
 
 class UnidadCargoController extends ApiController
 {
@@ -33,6 +34,8 @@ class UnidadCargoController extends ApiController
         $this->validate($request, $reglas);
         $data = $request->all();
         $unidadCargo = UnidadCargo::create($data);
+        if($unidadCargo)
+            Log::info('INSERT '.$unidadCargo);
 
         return $this->showOne($unidadCargo,201);
     }
@@ -60,14 +63,17 @@ class UnidadCargoController extends ApiController
             return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
         }
 
-        $unidadCargo->save();
+        if($unidadCargo->save())
+            Log::notice('UPDATE '.$unidadCargo);
+
         return $this->showOne($unidadCargo);
     }
 
     //elminar registro de la tabla
     public function destroy(UnidadCargo $unidadCargo)
     {
-        $unidadCargo->delete();
+        if($unidadCargo->delete())
+            Log::critical('DELETE '.$unidadCargo);
 
         return $this->showOne($unidadCargo);
     }

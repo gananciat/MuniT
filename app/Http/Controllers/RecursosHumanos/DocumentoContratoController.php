@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class DocumentoContratoController extends ApiController
 {
@@ -42,6 +43,8 @@ class DocumentoContratoController extends ApiController
         $data['doc'] = $request->doc->store($folder);
 
         $documentoContrato = DocumentoContrato::create($data);
+        if($documentoContrato)
+            Log::info('INSERT '.$documentoContrato);
 
         return $this->showOne($documentoContrato,201);
     }
@@ -69,14 +72,17 @@ class DocumentoContratoController extends ApiController
             return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
         }
 
-        $documentoContrato->save();
+        if($documentoContrato->save())
+            Log::notice('UPDATE '.$documentoContrato);
+            
         return $this->showOne($documentoContrato);
     }
 
     //elminar registro de la tabla
     public function destroy(DocumentoContrato $documentoContrato)
     {
-        $documentoContrato->delete();
+        if($documentoContrato->delete())
+            Log::critical('DELETE '.$documentoContrato);
 
         return $this->showOne($documentoContrato);
     }

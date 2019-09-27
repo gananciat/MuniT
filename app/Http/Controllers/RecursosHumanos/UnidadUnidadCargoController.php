@@ -6,6 +6,7 @@ use App\Unidad;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Log;
 
 class UnidadUnidadCargoController extends ApiController
 {

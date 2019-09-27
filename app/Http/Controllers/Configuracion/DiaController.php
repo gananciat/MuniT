@@ -6,6 +6,7 @@ use App\Dia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Log;
 
 class DiaController extends ApiController
 {
@@ -40,6 +41,9 @@ class DiaController extends ApiController
         $data = $request->all();
         $dia = dia::create($data);
 
+        if($dia)
+            Log::info('INSERT '.$dia);
+
         return $this->showOne($dia,201);
     }
 
@@ -66,14 +70,17 @@ class DiaController extends ApiController
             return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
         }
 
-        $dia->save();
+        if($dia->save())
+            Log::notice('UPDATE '.$dia);  
+
         return $this->showOne($dia);
     }
 
     //eliminar un registro de la tabla
     public function destroy(Dia $dia)
     {
-        $dia->delete();
+        if($dia->delete())
+            Log::critical('DELETE '.$dia); 
 
         return $this->showOne($dia);
     }

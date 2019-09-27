@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class ContratoController extends ApiController
 {
@@ -34,10 +35,13 @@ class ContratoController extends ApiController
         foreach ($contratos as $contrato) {
             if(Carbon::parse($contrato->fecha_fin)->format('d/m/Y') < $current_date){
                 $contrato->vencido = true;
-                $contrato->save();
+                if($contrato->save())
+                    Log::notice('UPDATE '.$contrato);
+
                 $empleado = $contrato->empleado;
                 $empleado->estado = false;
-                $empleado->save();
+                if($empleado->save())
+                    Log::notice('UPDATE '.$empleado);
             }
         }
 
@@ -77,7 +81,10 @@ class ContratoController extends ApiController
             $empleado->estado = true;
             if($empleado->save())
             {
+                Log::notice('UPDATE '.$empleado);
                 $contrato = Contrato::create($data);
+                if($contrato)
+                    Log::info('INSERT '.$contrato);                
             }
 
         DB::commit();
@@ -103,9 +110,12 @@ class ContratoController extends ApiController
         DB::beginTransaction();
             $empleado = $contrato->empleado;
             $empleado->estado = false;
-            $empleado->save();
+            if($empleado->save())
+                Log::notice('UPDATE '.$empleado);
 
-            $contrato->delete();
+            if($contrato->delete())
+                Log::critical('DELETE '.$contrato);
+                
         DB::commit();
 
         return $this->showOne($contrato);

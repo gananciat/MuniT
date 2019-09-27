@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class EmpleadoController extends ApiController
 {
@@ -64,13 +65,16 @@ class EmpleadoController extends ApiController
             $data = $request->all();
             $data['avatar'] = $imagePath;
             $empleado = Empleado::create($data);
+            if($empleado)
+                Log::info('INSERT '.$empleado);
 
             foreach ($request->telefonos as  $tel) {
                 $telefono = new TelefonoEmpleado();
                 $telefono->empleado_id = $empleado->id;
                 $telefono->telefono = $tel['telefono'];
 
-                $telefono->save();
+                if($telefono->save())
+                    Log::info('INSERT '.$telefono);
             }
         DB::commit();
 
@@ -131,10 +135,13 @@ class EmpleadoController extends ApiController
                 $telefono->empleado_id = $empleado->id;
                 $telefono->telefono = $tel['telefono'];
 
-                $telefono->save();
+                if($telefono->save())
+                    Log::info('INSERT '.$telefono);
             }
 
-            $empleado->save();
+            if($empleado->save())
+                Log::notice('UPDATE '.$empleado);
+
         DB::commit();
         return $this->showOne($empleado);
     }
@@ -142,7 +149,8 @@ class EmpleadoController extends ApiController
     //elminar registro de la tabla
     public function destroy(Empleado $empleado)
     {
-        $empleado->delete();
+        if($empleado->delete())
+            Log::critical('DELETE '.$empleado);
 
         return $this->showOne($empleado);
     }
@@ -150,7 +158,9 @@ class EmpleadoController extends ApiController
     public function cambiarEstado($id, Request $request){
         $empleado = Empleado::find($id);
         $empleado->estado = $request->estado;
-        $empleado->save();
+        if($empleado->save())
+            Log::notice('UPDATE '.$empleado);
+
         return $this->showOne($empleado,201);
     }
 }

@@ -6,9 +6,15 @@
 <div class="content-wrapper">        
   <!-- Main content -->
 <section class="content-header">
-  <h1>
-    Empleado 
-  </h1>
+  <div class="row">
+    <div class="col-md-8">
+      <h1>Empleado</h1>
+    </div>
+    <div class="col-md-4 text-right">
+      <a href="{{ route('imprimir.historial', app('request')->input('id')) }}" class="btn btn-primary btn-sm" target="_blank">Historial Laboral</a>
+    </div>
+  </div>
+
 </section>
 
 <section class="content">

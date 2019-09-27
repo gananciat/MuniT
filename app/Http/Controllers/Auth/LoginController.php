@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Http\Traits\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
@@ -18,7 +19,9 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request) 
+    {
+      Log::warning('Cerro Sesión '.Auth::user());
       Auth::logout();
       return redirect('/login');
     }

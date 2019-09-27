@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Log;
 
 class TipoContratoController extends ApiController
 {
@@ -42,6 +43,9 @@ class TipoContratoController extends ApiController
 
             $data = $request->all();
             $tipoContrato = TipoContrato::create($data);
+
+            if($tipoContrato)
+                Log::info('INSERT '.$tipoContrato);
 
             $tipoContrato->prestaciones()->attach($request->prestaciones);
 
@@ -81,7 +85,8 @@ class TipoContratoController extends ApiController
                 return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
             }*/
 
-            $tipoContrato->save();
+            if($tipoContrato->save())
+                Log::notice('UPDATE '.$tipoContrato); 
 
         DB::commit();
         return $this->showOne($tipoContrato);
@@ -90,7 +95,8 @@ class TipoContratoController extends ApiController
     //elminar registro de la tabla
     public function destroy(TipoContrato $tipoContrato)
     {
-        $tipoContrato->delete();
+        if($tipoContrato->delete())
+            Log::critical('DELETE '.$tipoContrato); 
 
         return $this->showOne($tipoContrato);
     }

@@ -6,6 +6,7 @@ use App\TipoDocumento;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Log;
 
 class TipoDocumentoController extends ApiController
 {
@@ -39,6 +40,9 @@ class TipoDocumentoController extends ApiController
         $data = $request->all();
         $tipoDocumento = tipoDocumento::create($data);
 
+        if($tipoDocumento)
+            Log::info('INSERT '.$tipoDocumento);
+
         return $this->showOne($tipoDocumento,201);
     }
 
@@ -63,14 +67,17 @@ class TipoDocumentoController extends ApiController
             return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
         }
 
-        $tipoDocumento->save();
+        if($tipoDocumento->save())
+            Log::notice('UPDATE '.$tipoDocumento); 
+
         return $this->showOne($tipoDocumento);
     }
 
     //eliminar registro de la tabla a nivel logico
     public function destroy(TipoDocumento $tipoDocumento)
     {
-        $tipoDocumento->delete();
+        if($tipoDocumento->delete())
+            Log::critical('DELETE '.$tipoDocumento);
 
         return $this->showOne($tipoDocumento);
     }
