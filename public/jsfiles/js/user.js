@@ -98,6 +98,12 @@ model.userController = {
         var data = self.user;
         var dataParams = ko.toJS(data);
 
+        var exists = self.users().filter(x=>x.empleado_id === parseInt(dataParams.empleado_id));
+        if(exists.length > 0){
+            toastr.error('empleado ya tiene usuario asignado','error');
+            return;
+        }
+
         //llamada al servicio
         userService.create(dataParams)
         .then(r => {

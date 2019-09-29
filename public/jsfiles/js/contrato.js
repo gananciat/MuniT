@@ -13,8 +13,11 @@ model.contratoController = {
         salario: ko.observable(""),
         primer_salario: ko.observable(null),
         monto: ko.observable(""),
-        cantidad_pagos: ko.observable(null),
-        isPrimerPago: ko.observable(false)
+        cantidad_pagos: ko.observable(0),
+        isPrimerPago: ko.observable(false),
+        tiempo_indefinido: ko.observable(false),
+        unidad_id: ko.observable(null),
+        fecha_anulado: ko.observable("")
     },
 
 
@@ -44,7 +47,7 @@ model.contratoController = {
     map: function (data) {
         var form = model.contratoController.contrato;
         form.id(data.id);
-        form.nombre(data.nombre);
+        form.no_contrato(data.no_contrato);
     },
 
   //nuevo registro, limpiar datos del formulario
@@ -59,15 +62,22 @@ model.contratoController = {
     //limpiar formulario
     clearData: function(){
        let self = model.contratoController;
+        var form = self.contrato;
+        form.id(null);
+        form.no_contrato("");
+        form.empleado_id(null);
+        form.tipo_contrato_id(null);
+        form.unidad_cargo(null);
+        form.unidad_cargo_id(null);
+        form.fecha_inicio("");
+        form.fecha_fin("");
+        form.salario("");
+        form.primer_salario(null);
+        form.monto("");
+        form.cantidad_pagos(0);
+        form.isPrimerPago(false);
 
-        Object.keys(self.contrato).forEach(function(key,index) {
-          if(typeof self.contrato[key]() === "string") 
-            self.contrato[key]("")
-          else if (typeof self.contrato[key]() === "boolean") 
-            self.contrato[key](false)
-          else if (typeof self.contrato[key]() === "number") 
-            self.contrato[key](null)
-        });
+
     },
 
 
@@ -75,10 +85,6 @@ model.contratoController = {
     editar: function (data){
         let self = model.contratoController;
         self.map(data);
-
-        self.editMode(true);
-        self.gridMode(false);
-        self.insertMode(true);
     },
 
 //crear o editar registro, segun condicion if.
@@ -86,9 +92,12 @@ model.contratoController = {
         let self = model.contratoController;
         self.contrato.empleado_id(self.empleado.id());
 
-        if(self.validarFechas(self.contrato.fecha_inicio(), self.contrato.fecha_fin())){
-            toastr.error('la fecha fin debe ser mayor a fecha de inicio','error');
-            return;
+        if(!self.contrato.tiempo_indefinido()){
+            if(self.validarFechas(self.contrato.fecha_inicio(), self.contrato.fecha_fin())){
+                toastr.error('la fecha fin debe ser mayor a fecha de inicio','error');
+                return;
+            }
+
         }
      //validar formulario
         if (!model.validateForm('#formulario')) { 
@@ -104,7 +113,6 @@ model.contratoController = {
         var data = self.contrato;
         var dataParams = ko.toJS(data);
         dataParams.unidad_cargo_id = dataParams.unidad_cargo.id;
-        console.log(dataParams);
         if(dataParams.empleado_id === "" || dataParams.empleado_id === null){
             toastr.error("debe seleccionar un empleado","error");
             return;
@@ -138,6 +146,24 @@ model.contratoController = {
         .catch(r => {
             toastr.error(r.response.data.error)
         });
+    },
+
+    //funcion para anular contrato registro
+    anular: function () {
+        let self= model.contratoController;
+        //validar formulario
+        if (!model.validateForm('#form_anulado')) { 
+            return;
+        }
+        bootbox.confirm({ 
+            title: "anular contrato",
+            message: "¿Esta seguro de anular contrato " + self.contrato.no_contrato() + "?",
+            callback: function(result){ 
+                if (result) {
+                    self.update();         
+                }
+            }
+        })
     },
 
 //funcion para eliminar registro
@@ -175,9 +201,10 @@ model.contratoController = {
         let self = model.contratoController;
         self.insertMode(false);
         self.editMode(false);
-        self.gridMode(true)
-        self.clearData()
-        self.initialize()
+        self.gridMode(true);
+        self.empleadoInfo(false);
+        self.clearData();
+        self.initialize();
     },
 
     //obtener empleados
@@ -186,12 +213,12 @@ model.contratoController = {
         //llamada al servicio
         empleadoService.getAll()
         .then(r => {
+            self.empleados([]);
             r.data.forEach(function(item){
                 if(item.estado === 0){
                     self.empleados.push(item);
                 }
             })
-            console.log(self.empleados());
         })
         .catch(r => {});
     },
@@ -253,7 +280,7 @@ model.contratoController = {
         let self = model.contratoController;
         var is_activo = false;
         self.contratos().forEach(function(item){
-            if(item.empleado_id === empleado_id && !item.vencido && item.deleted_at === null){
+            if(item.empleado_id === empleado_id && !item.vencido && !item.anulado){
                 is_activo = true;
             }
         })
@@ -292,3 +319,24 @@ model.contratoController = {
 /*model.contratoController.isPrimerPago.showInputPrimerPago = ko.computed({
           
 });*/
+
+model.contratoController.contrato.unidad_id.subscribe(function (value){
+    if(value !== undefined){
+        model.contratoController.cargos(value);   
+    }
+})
+
+model.contratoController.contrato.tipo_contrato_id.subscribe(function (value){
+    let self = model.contratoController;
+    if(value !== undefined && value !== null){
+        let result = self.tipo_contratos().find(obj => {
+          return obj.id === value
+        })
+        self.contrato.tiempo_indefinido(result.tiempo_indefinido);   
+        if(value){
+            self.contrato.isPrimerPago(false);
+            self.contrato.fecha_fin('');
+            self.contrato.cantidad_pagos(0);
+        }
+    }
+})

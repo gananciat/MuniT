@@ -16,9 +16,10 @@ class CreateContratosTable extends Migration
             $table->decimal('salario',11,2);
             $table->decimal('primer_salario',11,2)->default(0);
             $table->decimal('monto',11,2)->default(0);
-            $table->integer('cantidad_pagos')->default(0);
+            $table->integer('cantidad_pagos')->default(0)->nullable();
             $table->boolean('vencido')->default(0);
-            $table->date('fecha_terminado')->nullable();
+            $table->date('fecha_anulado')->nullable();
+            $table->boolean('anulado')->default(0);
             
             $table->unsignedBigInteger('empleado_id');
             $table->foreign('empleado_id')->references('id')->on('empleados')->onUpdate('cascade');

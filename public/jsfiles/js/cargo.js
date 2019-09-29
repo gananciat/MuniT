@@ -152,6 +152,10 @@ model.cargoController = {
 
     addAtribucion(){
         let self = model.cargoController;
+        if(self.cargo.atribucion() ==='' || self.cargo.atribucion() === null){
+            toastr.error('ingrese atribucion','error');
+            return;
+        }
         var atribucion = self.cargo.atribucion();
         self.cargo.atribuciones.push(
             {descripcion: atribucion}

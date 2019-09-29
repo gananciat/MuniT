@@ -12,6 +12,7 @@ class CreateTipoContratosTable extends Migration
             $table->bigIncrements('id');
             $table->string('nombre',75);
             $table->string('numero',4);
+            $table->boolean('tiempo_indefinido')->default(0);
             $table->string('descripcion',500)->nullable();
 
             $table->softDeletes();

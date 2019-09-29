@@ -117,15 +117,15 @@
                         <span class="bg-yellow" data-bind="text: (moment(c.fecha_inicio)).format('dddd, DD MMMM YYYY')"></span>
 
                         <!-- ko if: c.vencido == '1' -->
-                        <span class="bg-red" data-bind="text: (moment(c.fecha_fin)).format('dddd, DD MMMM YYYY')"></span>
+                        <span class="bg-red" data-bind="text: !c.tipo_contrato.tiempo_indefinido ? moment(c.fecha_fin).format('dddd, DD MMMM YYYY') : 'tiempo indefinido'"></span>
                         <!-- /ko -->
 
-                        <!-- ko if:c.vencido == '0' && c.deleted_at == null -->
-                        <span class="bg-green" data-bind="text: (moment(c.fecha_fin)).format('dddd, DD MMMM YYYY')"></span>
+                        <!-- ko if:c.vencido == '0' && c.anulado === 0 -->
+                        <span class="bg-green" data-bind="text: !c.tipo_contrato.tiempo_indefinido ? moment(c.fecha_fin).format('dddd, DD MMMM YYYY'): 'tiempo indefinido'"></span>
                         <!-- /ko -->
 
-                        <!-- ko if:c.deleted_at != null -->
-                        <span class="bg-red" data-bind="text: (moment(c.deleted_at)).format('dddd, DD MMMM YYYY')"></span>
+                        <!-- ko if:c.anulado === 1 -->
+                        <span class="bg-red" data-bind="text: (moment(c.fecha_anulado)).format('dddd, DD MMMM YYYY')"></span>
                         <!-- /ko -->
                   </li>
                   <li>
@@ -133,11 +133,11 @@
 
                     <div class="timeline-item">
                       <span class="time"><i class="fa fa-status"></i> 
-                        <!-- ko if:c.vencido == '0' && c.deleted_at === null -->
+                        <!-- ko if:c.vencido == '0' && c.anulado === 0 -->
                         <a class="btn btn-success btn-xs">Contrato activo</a>
                         <!-- /ko -->
 
-                        <!-- ko if: c.deleted_at !== null -->
+                        <!-- ko if: c.anulado === 1 -->
                         <a class="btn btn-danger btn-xs">Contrato anulado</a>
                         <!-- /ko -->
 

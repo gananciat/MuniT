@@ -74,8 +74,11 @@
                                      minlength="3" maxlength="25" required>
                               <span class="errorNombre text-danger help-inline"></span>
                           </div>
+                          <div class="form-group col-md-12 col-lg-12">
+                            <p class="bold">¿Contrato por tiempo indefinido?: <input type="checkbox" data-bind="checked: tiempo_indefinido" /></p>
+                        </div>
                           <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <label for="text2">Nombre</label>
+                            <label for="text2">Descripción</label>
                                 <textarea type="text" id="nombre" name="nombre" placeholder="ingrese nombre" class="form-control"data-bind="value: descripcion"></textarea>
                           </div>
                           <div class="row col-md-12 col-sm-12">

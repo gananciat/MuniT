@@ -74,6 +74,7 @@ class TipoContratoController extends ApiController
             $tipoContrato->nombre = $request->nombre;
             $tipoContrato->numero = $request->numero;
             $tipoContrato->descripcion = $request->descripcion;
+            $tipoContrato->tiempo_indefinido = $request->tiempo_indefinido;
 
             //eliminamos registros anteriores
             $tipoContrato->prestaciones()->detach();

@@ -13,7 +13,8 @@ class TipoContrato extends Model
     protected $fillable= [
     	'nombre',
     	'numero',
-    	'descripcion'
+    	'descripcion',
+        'tiempo_indefinido'
     ];
 
     public function prestaciones(){

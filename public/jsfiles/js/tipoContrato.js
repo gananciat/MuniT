@@ -6,7 +6,8 @@ model.tipoContratoController = {
         nombre: ko.observable(""),
         numero: ko.observable(""),
         descripcion: ko.observable(""),
-        prestaciones: ko.observableArray([])
+        tiempo_indefinido: ko.observable(""),
+        prestaciones: ko.observableArray([]),
     },
 
     tipoContratos: ko.observableArray([]),
@@ -25,6 +26,7 @@ model.tipoContratoController = {
         form.nombre(data.nombre);
         form.numero(data.numero);
         form.descripcion(data.descripcion);
+        form.tiempo_indefinido(data.tiempo_indefinido);
 
         self.setPrestaciones(data.prestaciones);
     },
@@ -197,3 +199,4 @@ model.tipoContratoController = {
         self.getPrestaciones();
     }
 };
+

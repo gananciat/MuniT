@@ -39,12 +39,13 @@
                         <td data-bind="text: empleado.dpi+' - '+empleado.nombre1+' '+empleado.apellido1"></td>
                         <td data-bind="text: tipo_contrato.numero"></td>
                         <td data-bind="text: formatCurrency(parseFloat(monto).toFixed(2))"></td>
-                        <td data-bind="text: moment(fecha_inicio).format('DD/MM/YYYY')+' - '+moment(fecha_fin).format('DD/MM/YYYY')"></td>
+                        <td data-bind="text: moment(fecha_inicio).format('DD/MM/YYYY')+' - '+(fecha_fin !== null ? moment(fecha_fin).format('DD/MM/YYYY') : 'tiempo indefinido')"></td>
                         <td>
-                          <span class="label" data-bind="text: (deleted_at !== null ? 'Anulado' : (vencido === 0 ? 'Activo' : 'Vencido')), css: (deleted_at !== null ? 'label-danger' : (vencido === 0 ? 'label-success' : 'label-danger'))"></span>
+                          <span class="label" data-bind="text: (anulado === 1 ? 'Anulado' : (vencido === 0 ? 'Activo' : 'Vencido')), css: (anulado === 1 ? 'label-danger' : (vencido === 0 ? 'label-success' : 'label-danger'))"></span>
                         </td>
-                        <td width="10%" data-bind="if: deleted_at === null && vencido === 0"><span data-toggle="tooltip" title="adjuntar documentos"><a data-toggle="modal" data-target="#documento" class="btn btn-primary btn-xs"> <i class="fa fa-file-archive-o" data-bind="click: model.contratoController.initializeDocumentos"></i></a></span>
-                            <a href="#" class="btn btn-danger btn-xs" data-bind="click: model.contratoController.destroy" data-toggle="tooltip" title="anular contrato"><i class="fa fa-ban"></i></a>
+                        <td width="10%" data-bind="vencido === 0"><span data-bind="visible: !anulado" data-toggle="tooltip" title="adjuntar documentos"><a data-toggle="modal" data-target="#documento" class="btn btn-primary btn-xs" data-bind="click: model.contratoController.initializeDocumentos"> <i class="fa fa-file-archive-o"></i></a></span>
+
+                        <span data-bind="visible: !anulado" data-toggle="tooltip" title="anular contrato"><a data-toggle="modal" data-target="#anular" class="btn btn-danger btn-xs" data-bind="click: model.contratoController.editar"> <i class="fa fa-ban"></i></a></span>
                         </td>
                     </tr>                          
                     </tbody>
@@ -151,7 +152,7 @@
                               data-bind="selectPicker: true,
                               optionsText: function(depto) {return depto.nombre},
                               optionsValue: 'cargos',
-                              value: model.contratoController.cargos, 
+                              value: unidad_id, 
                               selectPickerOptions: { optionsArray: model.contratoController.departamentos},
                               optionsCaption: '--selecione departamento--'"
                               data-error=".errorDepto"
@@ -160,7 +161,7 @@
                           <span class="errorDepto text-danger help-inline"></span>
                       </div>
                         
-                      <div data-bind="if: model.contratoController.cargos() !== undefined" class="form-group col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                      <div class="form-group col-lg-3 col-md-3 col-sm-6 col-xs-12">
                         <label for="puesto">Puesto <span class="text-danger"> *</span></label>
                             <select id="estado_civil" class="form-control show-tick selectpicker" data-live-search="true"  
                               data-bind="selectPicker: true,
@@ -184,24 +185,24 @@
                                    minlength="3" maxlength="25" required>
                             <span class="errorFecha text-danger help-inline"></span>
                         </div>
-                        <div class="form-group col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div data-bind="visible: !tiempo_indefinido()" class="form-group col-lg-3 col-md-3 col-sm-6 col-xs-12">
                           <label for="fecha_nacimiento">Fecha fin <span class="text-danger"> *</span></label>
                               <input type="date" id="fecha_fin" name="fecha_inicio" placeholder="ingrese fecha fin" class="form-control" data-bind="value: fecha_fin"
                                    data-error=".errorFechaFin"
                                    minlength="3" maxlength="25" required>
                             <span class="errorFechaFin text-danger help-inline"></span>
                         </div>
-                        <div class="form-group col-lg-2 col-md-2 col-sm-3 col-xs-12">
+                        <div data-bind="visible: !tiempo_indefinido()" class="form-group col-lg-2 col-md-2 col-sm-3 col-xs-12">
                           <label for="fecha_nacimiento">Cantidad pagos <span class="text-danger"> *</span></label>
                               <input type="number" id="cantidad" name="fecha_inicio" placeholder="ingrese cantidad depagos" class="form-control" data-bind="value: cantidad_pagos, event:{change: model.contratoController.setMonto}"
                                    data-error=".errorCantidadPagos" required>
                             <span class="errorFechaFin text-danger help-inline"></span>
                         </div>
 
-                        <div class="form-group col-md-2 col-lg-2">
+                        <div data-bind="visible: !tiempo_indefinido()" class="form-group col-md-2 col-lg-2">
                             <p class="bold">primer pago: <input type="checkbox" data-bind="checked: isPrimerPago, event:{change: model.contratoController.setMonto}" /></p>
                         </div>
-                        <div data-bind="if: isPrimerPago()" class="form-group col-lg-2 col-md-4 col-sm-4 col-xs-12">
+                        <div data-bind="visible: isPrimerPago() && !tiempo_indefinido()" class="form-group col-lg-2 col-md-4 col-sm-4 col-xs-12">
                           <label for="primer_pago">Primer pago</label>
                               <input type="number" id="primer_pago" name="salario" placeholder="primer pago" class="form-control" data-bind="value: primer_salario, event:{change: model.contratoController.setMonto}">
                         </div>
@@ -213,7 +214,7 @@
                                    data-error=".errorSalario" required>
                             <span class="errorSalario text-danger help-inline"></span>
                         </div>
-                        <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <div data-bind="visible: !tiempo_indefinido()" class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                           <label for="primer_pago">Monto total de contrato</label>
                               <input type="number" id="monto" name="monto" class="form-control" data-bind="value: monto"
                                    data-error=".erorrMonto" required readonly>
@@ -342,6 +343,42 @@
                 <th></th>
               </tfoot>
             </table>
+        </div>
+      </div>
+      </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="anular" data-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        Anular contrato <span data-bind="text: model.contratoController.contrato.no_contrato()"></span> <a class="btn-xs pull-right"><i class="fa fa-close" data-dismiss="modal"></i></a>
+      </div>
+      <div class="modal-body">
+        <div class="panel-body table-responsive" id="listadocs">
+          
+          <form id="form_anulado" name="form_anulado" data-bind="with: model.contratoController.contrato">
+          <div class="row">
+            <div class="form-group col-lg-3 col-md-3 col-sm-6 col-xs-12">
+              <label for="fecha_nacimiento">Fecha anulado <span class="text-danger"> *</span></label>
+                  <input type="date" id="fecha_anulado" name="fecha_inicio" placeholder="ingrese fecha anulado" class="form-control" data-bind="value: fecha_anulado"
+                       data-error=".errorFechaFin"
+                       minlength="3" maxlength="25" required>
+                <span class="errorFechaFin text-danger help-inline"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-12">
+              <div>
+                <a class="btn btn-success btn-sm" data-bind="click: model.contratoController.anular"><i class="fa fa-save"></i> Guardar</a>
+                <a class="btn btn-danger btn-sm" data-bind="click: model.contratoController.cancelar"><i class="fa fa-eraser"></i> Cancelar</a>
+              </div>
+            </div>
+          </div><br />
+          </form>
         </div>
       </div>
       </div>

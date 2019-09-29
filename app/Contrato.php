@@ -26,7 +26,8 @@ class Contrato extends Model
     	'tipo_contrato_id',
     	'unidad_cargo_id',
     	'vencido',
-        'termiando'
+        'anulado',
+        'fecha_anulado'
     ];
 
     public function empleado()

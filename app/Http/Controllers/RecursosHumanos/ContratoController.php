@@ -45,7 +45,7 @@ class ContratoController extends ApiController
             }
         }
 
-        $contratos = Contrato::with('empleado','tipo_contrato','unidad_cargo')->withTrashed()->get();
+        $contratos = Contrato::with('empleado','tipo_contrato','unidad_cargo')->get();
 
         return $this->showAll($contratos);
     }
@@ -63,10 +63,8 @@ class ContratoController extends ApiController
     {
         $reglas = [
             'fecha_inicio'=> 'required',
-            'fecha_fin' => 'required',
             'salario' => 'required',
             'monto' => 'required',
-            'cantidad_pagos' => 'required|integer',
             'empleado_id' => 'required|integer|exists:empleados,id',
             'tipo_contrato_id' => 'required|integer|exists:tipo_contratos,id',
             'unidad_cargo_id' => 'required|integer|exists:unidad_cargos,id'
@@ -101,7 +99,18 @@ class ContratoController extends ApiController
     //actualiza el registro terminar contrato
     public function update(Request $request, Contrato $contrato)
     {
-        
+        DB::beginTransaction();
+        $contrato->anulado=true;
+        $contrato->fecha_anulado = $request->fecha_anulado;
+
+        $empleado = $contrato->empleado;
+        $empleado->estado = false;
+        $empleado->save();
+
+        if($contrato->save())
+                Log::notice('UPDATE '.$contrato);
+        DB::commit();
+        return $this->showOne($contrato,201);
     }
 
     //elminar registro de la tabla

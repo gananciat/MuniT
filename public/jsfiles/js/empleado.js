@@ -107,6 +107,7 @@ model.empleadoController = {
         self.editMode(true);
         self.gridMode(false);
         self.insertMode(true);
+        self.flags.showPersonal(true);
     },
 
 //crear o editar registro, segun condicion if.
