@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contrato;
 use DateTime;
 use App\Empleado;
 use Illuminate\Http\Request;
@@ -93,10 +94,21 @@ class ReporteController extends Controller
             $data['telefonos'] .= $telefono->telefono.', ';
         }
 
+        $contratos = Contrato::with('tipo_contrato','unidad_cargo.cargo','unidad_cargo.unidad')->where('empleado_id',$empleado->id)->where('fecha_anulado',null)->orderBy('fecha_inicio')->get();
         $usuario = Empleado::findOrFail(Auth::user()->empleado_id);
-        $pdf = PDF::loadView('layout.reporte.historial', compact('data','usuario'));
+        $pdf = PDF::loadView('layout.reporte.historial', compact('data','contratos','usuario'));
 
-        Log::debug('Imprimio Historial', array('información' => $data));
+        Log::debug('Imprimio Historial', array('información' => $data, 'contratos' => $contratos, 'usuario' => $usuario));
         return $pdf->stream('historial.pdf');
-    }    
+    } 
+    
+    public function contratos()
+    {
+        $contratos = Contrato::with('empleado','tipo_contrato','unidad_cargo.cargo','unidad_cargo.unidad')->where('fecha_anulado',null)->orderBy('fecha_inicio')->get();
+        $usuario = Empleado::findOrFail(Auth::user()->empleado_id);
+        $pdf = PDF::loadView('layout.reporte.contrato', compact('contratos','usuario'));
+        
+        Log::debug('Imprimio Contratos', array('contratos' => $contratos, 'usuario' => $usuario));
+        return $pdf->stream('contratos.pdf');        
+    }
 }

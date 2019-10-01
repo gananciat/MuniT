@@ -29,6 +29,7 @@ Route::name('cambiar_contraseña')->post('users_change_password','Acceso\UserCon
 
 Route::get('/empleadosView/imprimir/empleados', 'ReporteController@empleados')->name('imprimir.empleados');
 Route::get('/empleadosView/imprimir/historial/{id}', 'ReporteController@historial')->name('imprimir.historial');
+Route::get('/empleadosView/imprimir/contratos', 'ReporteController@contratos')->name('imprimir.contratos');
 
 //=====================DEPARTAMENTOS DE GUATEMALA==========================//
 Route::get('departamentosView', 'Configuracion\DepartamentoController@view')->name('departamentosView');
