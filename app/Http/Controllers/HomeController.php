@@ -22,8 +22,8 @@ class HomeController extends ApiController
     public function index()
     {
         $contratos = Contrato::all();
-        $contratos_activo = Contrato::where('vencido',true)->get();
-        $contratos_inactivo = Contrato::where('vencido',false)->get();
+        $contratos_activo = Contrato::where('vencido',false)->where('anulado',false)->get();
+        $contratos_inactivo = Contrato::where('vencido',true)->orWhere('anulado',true)->get();
 
         return view('home',compact('contratos','contratos_activo','contratos_inactivo'));
     }
