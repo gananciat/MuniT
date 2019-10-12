@@ -14,6 +14,7 @@
                     <h1 class="box-title">contratos <button class="btn btn-success btn-md" id="btnagregar" data-bind="click: model.contratoController.nuevo" ><i class="fa fa-plus-circle"></i> Agregar</button></h1>
                   @endif
                   <div class="box-tools pull-right">
+                    <a href="{{ route('imprimir.contratos') }}" class="btn btn-primary btn-sm" target="_blank">Listado de Contratos</a>
                   </div>
               </div>
               <br>

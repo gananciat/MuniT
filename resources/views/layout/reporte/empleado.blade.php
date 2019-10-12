@@ -28,7 +28,6 @@
         padding: 0.3em;
         border-collapse: collapse;
         white-space:initial;
-        
       }      
       caption {
         padding: 0.3em;
