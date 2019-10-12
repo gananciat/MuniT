@@ -106,6 +106,7 @@ class ReporteController extends Controller
     {
         $contratos = Contrato::with('empleado','tipo_contrato','unidad_cargo.cargo','unidad_cargo.unidad')->where('fecha_anulado',null)->orderBy('fecha_inicio')->get();
         $usuario = Empleado::findOrFail(Auth::user()->empleado_id);
+        
         $pdf = PDF::loadView('layout.reporte.contrato', compact('contratos','usuario'));
         
         Log::debug('Imprimio Contratos', array('contratos' => $contratos, 'usuario' => $usuario));

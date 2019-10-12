@@ -6,7 +6,7 @@ model.tipoContratoController = {
         nombre: ko.observable(""),
         numero: ko.observable(""),
         descripcion: ko.observable(""),
-        tiempo_indefinido: ko.observable(""),
+        tiempo_indefinido: ko.observable(false),
         prestaciones: ko.observableArray([]),
     },
 
