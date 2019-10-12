@@ -10,7 +10,7 @@
         <div class="col-md-12">
             <div class="box box-primary">
               <div class="box-header with-border">
-                    <h1 class="box-title">Unidades (departamentos) <button class="btn btn-success btn-md" id="btnagregar" data-toggle="modal" data-target="#nuevo" data-bind="model.unidadController.clearData()" ><i class="fa fa-plus-circle"></i> Agregar</button></h1>
+                    <h1 class="box-title">Unidades (departamentos) <button class="btn btn-success btn-md" id="btnagregar" data-toggle="modal" data-target="#nuevo" data-bind="click: model.unidadController.clearData()" ><i class="fa fa-plus-circle"></i> Agregar</button></h1>
                   <div class="box-tools pull-right">
                   </div>
               </div>

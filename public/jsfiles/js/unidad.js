@@ -55,6 +55,7 @@ model.unidadController = {
 //limpia los dataos del formulario
     clearData: function(){
        let self = model.unidadController;
+       self.editMode(false);
 
         Object.keys(self.unidad).forEach(function(key,index) {
           if(typeof self.unidad[key]() === "string") 
