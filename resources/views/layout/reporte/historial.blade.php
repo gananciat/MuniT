@@ -188,6 +188,7 @@
           <th id="th">Cargo</th>
           <th id="th">Unidad</th>
           <th id="th">Vencido</th>
+          <th id="th">Anulado</th>
         </tr>
       </thead>
       <tbody>
@@ -215,6 +216,13 @@
           <td style="text-align: center;" id="td">
             @if($data->vencido)   
               SI   
+            @else
+              NO
+            @endif
+          </td>
+          <td style="text-align: center;" id="td">
+            @if(!is_null($data->fecha_anulado))
+              SI
             @else
               NO
             @endif

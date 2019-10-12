@@ -94,7 +94,7 @@ class ReporteController extends Controller
             $data['telefonos'] .= $telefono->telefono.', ';
         }
 
-        $contratos = Contrato::with('tipo_contrato','unidad_cargo.cargo','unidad_cargo.unidad')->where('empleado_id',$empleado->id)->where('fecha_anulado',null)->orderBy('fecha_inicio')->get();
+        $contratos = Contrato::with('tipo_contrato','unidad_cargo.cargo','unidad_cargo.unidad')->where('empleado_id',$empleado->id)->orderBy('fecha_inicio')->get();
         $usuario = Empleado::findOrFail(Auth::user()->empleado_id);
         $pdf = PDF::loadView('layout.reporte.historial', compact('data','contratos','usuario'));
 
@@ -104,7 +104,7 @@ class ReporteController extends Controller
     
     public function contratos()
     {
-        $contratos = Contrato::with('empleado','tipo_contrato','unidad_cargo.cargo','unidad_cargo.unidad')->where('fecha_anulado',null)->orderBy('fecha_inicio')->get();
+        $contratos = Contrato::with('empleado','tipo_contrato','unidad_cargo.cargo','unidad_cargo.unidad')->orderBy('fecha_inicio')->get();
         $usuario = Empleado::findOrFail(Auth::user()->empleado_id);
         
         $pdf = PDF::loadView('layout.reporte.contrato', compact('contratos','usuario'));
